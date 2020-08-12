@@ -3,7 +3,7 @@ import { Form, Input, Button,Divider,Table, notification } from 'antd';
 import {get} from '../../service/index'
 import {FormOutlined} from '@ant-design/icons';
 import {withRouter} from 'react-router'
-class index extends Component {
+class Index extends Component {
     constructor(props){
         super(props)
         this.state={
@@ -13,7 +13,7 @@ class index extends Component {
             },
             loading:true
         }
-        this.LoadData()
+        this.loadData()
     }
     columns = [
         {
@@ -37,7 +37,7 @@ class index extends Component {
             title: '操作',
             dataIndex: 'action',
             key: 'action',
-            render:(text, record)=>{
+            render:(_, record)=>{
                 let Href = [this.props.location.pathname, record.id].join("/");
                 return (
                     <div>
@@ -51,14 +51,14 @@ class index extends Component {
     goto(href,record){
         this.props.history.push(href)  
     }
-    LoadData(){
+    loadData(){
         get(`/token`, {method:"GET"}).then((data)=>{
-            let token_list = data.data
-            token_list.forEach(item=>{
+            let tokenList = data.data
+            tokenList.forEach(item=>{
                 item.key = item.id
             })
 
-            this.setState({dataSource:token_list,page:data.page,loading:false})
+            this.setState({dataSource:tokenList,page:data.page,loading:false})
         }).catch((e)=>{
             console.log(e);
         })
@@ -70,7 +70,7 @@ class index extends Component {
                 placement: 'topRight',
                 duration: 3,
             });
-            this.LoadData()
+            this.loadData()
         }).catch((e)=>{
 
         })
@@ -107,11 +107,9 @@ class index extends Component {
                     loading={this.state.loading}
                     dataSource={this.state.dataSource} 
                     columns={this.columns} 
-                    
-                    // onChange={this.OnChange.bind(this)} 
                 />
             </div>
         )
     }
 }
-export default withRouter(index)
+export default withRouter(Index)

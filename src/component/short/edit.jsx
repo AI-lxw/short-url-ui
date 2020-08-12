@@ -3,33 +3,31 @@ import { Form, Input, Button,Divider,Table,Select,notification,InputNumber,Popco
 import { get } from '../../service/index';
 import {DeleteOutlined} from '@ant-design/icons';
 const { Option } = Select;
-export default class edit extends Component {
+export default class Edit extends Component {
     formRef = React.createRef();
     constructor(props){
         super(props)
         this.state = {
             dataSource:{},
-            List:[],
-           
+            list:[],
         }
         this.loadList()
     }
     componentDidMount(){
-        this.LoadData()
+        this.loadData()
 
     }
     loadList(){
-        get(`/short/${this.props.match.params.id}/tag`, {method:"GEListidT"}).then((data)=>{
-            console.log(data);
+        get(`/short/${this.props.match.params.id}/tag`, {method:"GET"}).then((data)=>{
             data.forEach(item=>{
                 item.key = item.id
             })
-            this.setState({List:data})
+            this.setState({list:data})
         }).catch((e)=>{
             console.log(e);
         })
     }
-    LoadData(){
+    loadData(){
         let id = this.props.match.params.id
         get(`/short/${id}`, {method:"GET"}).then((data)=>{
             this.formRef.current.setFieldsValue(data)
@@ -81,7 +79,6 @@ export default class edit extends Component {
 
     ];
     onFinish(val){
-        console.log(val);
         let id = this.props.match.params.id
         switch(val.params){
             case '禁用':
@@ -111,9 +108,6 @@ export default class edit extends Component {
 
         })
     }
-    onChange(val){
-        console.log(val);
-    }
 
     descFinish(val){
         get(`/short/${this.props.match.params.id}/tag`,{method:'POST'},val).then(()=>{
@@ -128,16 +122,24 @@ export default class edit extends Component {
         })
 
     }
-    
+    deploy(){
+        get(`/short/${this.props.match.params.id}/deploy`, {method:"GET"}).then(()=>{
+            notification.success({
+                message: '操作成功',
+                placement: 'topRight',
+                duration: 3,
+            });
+        }).catch((e)=>{
+            console.log(e);
+        }) 
+    }
     render() {
-        // const url = this.state.dataSource.url
         return (
             <div>
                 <Form 
                     layout="inline"
                     name="basic"
                     onFinish={this.onFinish.bind(this)}
-                    // onFinishFailed={onFinishFailed}
                     ref={this.formRef}
                     initialValues={this.state.dataSource}
                 >
@@ -156,7 +158,6 @@ export default class edit extends Component {
                     <Form.Item  label='分流' rules={[{ required: true }]} name='params'>
                     <Select
                         placeholder="Select"
-                        onChange={this.onChange}
                         style={{ width: 120, margin: '0 8px' }}
                     >
                         <Option value="禁用" >禁用</Option>
@@ -170,7 +171,7 @@ export default class edit extends Component {
                         </Button>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" onClick={()=>{}}>
+                        <Button type="primary" onClick={()=>{this.deploy()}}>
                             应用
                         </Button>
                     </Form.Item>
@@ -180,7 +181,6 @@ export default class edit extends Component {
                     layout="inline"
                     name="basic"
                     onFinish={this.descFinish.bind(this)}
-                    // onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         name="desc"
@@ -202,7 +202,6 @@ export default class edit extends Component {
                             max={100}
                             formatter={value => `${value}%`}
                             parser={value => value.replace('%', '')}
-                            // onChange={onChange}
                         />
                     </Form.Item>
                     <Form.Item>
@@ -212,7 +211,7 @@ export default class edit extends Component {
                     </Form.Item>
                 </Form>
                 <Divider></Divider>
-                <Table dataSource={this.state.List} columns={this.columns} />
+                <Table dataSource={this.state.list} columns={this.columns} />
             </div>
         )
     }

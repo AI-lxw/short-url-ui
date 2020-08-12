@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Form, Input, Button,Divider,Table,Typography } from 'antd';
+import { Form, Input, Button,Divider,Table,Typography,notification } from 'antd';
 import {FormOutlined} from '@ant-design/icons';
 import {withRouter} from 'react-router'
 import { get } from '../../service/index';
-import {FormatData} from '../../assets/js/FormatData'
+import {formatData} from '../../assets/js/formatData'
 const { Paragraph } = Typography;
-class index extends Component {
+class Index extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -18,18 +18,18 @@ class index extends Component {
             },
             loading: true
         }
-        this.LoadData()
+        this.loadData()
     }
 
-    LoadData(){
+    loadData(){
         get(`/short/?pageIndex=1&pageSize=10`, {method:"GET"}).then((data)=>{
-            let render_data = FormatData(data.data)
-            this.setState({dataSource:render_data,page:data.page,loading:false})
+            let renderData = formatData(data.data)
+            this.setState({dataSource:renderData,page:data.page,loading:false})
         }).catch((e)=>{
             this.setState({loading: false})
         })
     }
-    goto(href,record){
+    goto(href){
         this.props.history.push(href)  
     }
     columns = [
@@ -39,7 +39,7 @@ class index extends Component {
             dataIndex: 'edit',
             width:150,
             align:'center',
-            render:(text, record)=>{
+            render:(_, record)=>{
                 let Href = [this.props.location.pathname, record.id].join("/");
                 
                 return (
@@ -66,7 +66,6 @@ class index extends Component {
             title: 'URL',
             dataIndex: 'url',
             key: 'url',
-            // textWrap: 'word-break',
             ellipsis: true,
         },
         {
@@ -87,11 +86,8 @@ class index extends Component {
     OnChange(e){
         console.log(e);
         get(`/short/?pageIndex=${e.current}&pageSize=${e.pageSize}`, {method:"GET"}).then((data)=>{
-            console.log(data.page);
-            let render_data = FormatData(data.data)
-            console.log(this);
-            console.log(render_data);
-            this.setState({dataSource:render_data,page:data.page,loading:false})
+            let renderData = formatData(data.data)
+            this.setState({dataSource:renderData,page:data.page,loading:false})
         }).catch((e)=>{
             console.log(e);
         })
@@ -99,11 +95,15 @@ class index extends Component {
     }
     add(content){
         get(`/short`, {method:"POST"}, content).then(()=>{
-            this.LoadData()
+            notification.success({
+                message: '操作成功',
+                placement: 'topRight',
+                duration: 3,
+            });
+            this.loadData()
         })
     }
     onFinish(val){
-        console.log(val);
         this.add(val)
     }
     render() {
@@ -113,7 +113,6 @@ class index extends Component {
                     layout="inline"
                     name="basic"
                     onFinish={this.onFinish.bind(this)}
-                    // onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         label="URL"
@@ -146,4 +145,4 @@ class index extends Component {
         )
     }
 }
-export default withRouter(index)
+export default withRouter(Index)

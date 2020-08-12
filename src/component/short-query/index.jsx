@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Form, Input, Button,Divider,Table,Typography} from 'antd';
 import {FormOutlined} from '@ant-design/icons';
 import { get } from '../../service/index';
-import {FormatData} from '../../assets/js/FormatData'
+import {formatData} from '../../assets/js/formatData'
 const { Paragraph } = Typography;
 
-export default class index extends Component {
+export default class Index extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -65,15 +65,13 @@ export default class index extends Component {
     ];
     query(url){
         get(`/short/query/any?url=${url}`, {method:"GET"}).then((data)=>{
-            console.log(FormatData(data));
-            this.setState({dataSource:FormatData(data),loading:false})
+            this.setState({dataSource:formatData(data),loading:false})
         }).catch((e)=>{
             console.log(e);
         })
     }
     onFinish(val){
         this.query(val.url)
-        // console.log(val.url);
     }
     render() {
         return (
@@ -82,7 +80,6 @@ export default class index extends Component {
                     layout="inline"
                     name="basic"
                     onFinish={this.onFinish.bind(this)}
-                    // onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         name="url"

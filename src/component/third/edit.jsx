@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import { Form, Input, Button,notification } from 'antd';
 import { get } from '../../service/index';
-export default class edit extends Component {
-    constructor(props){
-        super(props)
-        console.log(this.props);
+export default class Edit extends Component {
+    formRef = React.createRef();
+    componentDidMount(){
+        this.loadData()
     }
-
+    loadData(){
+        get(`/token/${this.props.match.params.app_id}`, {method:"GET"}).then((data)=>{
+            this.formRef.current.setFieldsValue(data)
+        }).catch((e)=>{
+            console.log(e);
+        })
+    }
     onFinish(val){
         
         get(`/token/${this.props.match.params.app_id}`,{method:'PUT'},val).then(()=>{
@@ -27,7 +33,7 @@ export default class edit extends Component {
                     layout="inline"
                     name="basic"
                     onFinish={this.onFinish.bind(this)}
-                    // onFinishFailed={onFinishFailed}
+                    ref={this.formRef}
                 >
                     <Form.Item
                         label='应用名称'

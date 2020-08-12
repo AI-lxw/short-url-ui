@@ -17,24 +17,7 @@ import ThirdEdit from '../third/edit'
 import './index.scss'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-class index extends Component {
-    constructor(props){
-        super(props)
-        // this.state = {
-            
-        // };
-        console.log(props);
-    }
-
-
-    menuClick(item){
-        let queue = [this.props.match.path]
-        // if(item.key !== "home"){
-        //     queue.push(item.key)
-        // }
-        // this.props.history.push(queue.join("/"))
-        console.log(queue);
-    }
+class Index extends Component {
     render() {
         return (
             <Layout style={{ minHeight: '100vh' }}>
@@ -44,7 +27,6 @@ class index extends Component {
                         theme="dark" 
                         defaultSelectedKeys={['1']} 
                         mode="inline" 
-                        onClick={(item, key)=>{this.menuClick(item, key)}}
                     >
                         <Menu.Item key="short" icon={<FileTextOutlined />}>
                             <Link to='/short'>短链生成</Link>
@@ -87,4 +69,4 @@ class index extends Component {
         )
     }
 }
-export default withRouter(index)
+export default withRouter(Index)

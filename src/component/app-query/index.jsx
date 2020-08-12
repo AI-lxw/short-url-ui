@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button,Divider,Table,Typography } from 'antd';
 const { Paragraph } = Typography;
-export default class index extends Component {
+export default class Index extends Component {
     dataSource = [
         {
             key:'1',
@@ -23,7 +23,7 @@ export default class index extends Component {
             title: '短链',
             dataIndex: 'short',
             key: 'short',
-            render:(val,record,index)=>{
+            render:(val)=>{
                 return(
                 <Paragraph copyable>{val}</Paragraph>
 
@@ -52,8 +52,6 @@ export default class index extends Component {
                 <Form 
                     layout="inline"
                     name="basic"
-                    // onFinish={onFinish}
-                    // onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         name="AppToken"
